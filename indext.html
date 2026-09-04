@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <!-- Important for Mobile Responsive Design -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>A Special Date ❤️</title>
+
+    <style>
+        /* =========================================
+           GLOBAL
+        ========================================== */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        html,
+        body {
+            width: 100%;
+            min-height: 100%;
+        }
+
+        body {
+            background: #ffffff;
+            overflow-x: hidden;
+        }
+
+
+        /* =========================================
+           PAGE SYSTEM
+        ========================================== */
+
+        .page {
+            display: none;
+            width: 100%;
+            min-height: 100vh;
+            min-height: 100dvh;
+
+            justify-content: center;
+            align-items: center;
+
+            text-align: center;
+            padding: 20px;
+
+            animation: fadeIn 0.5s ease;
+        }
+
+        .page.active {
+            display: flex;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            margin: auto;
+            padding: 30px;
+        }
+
+
+        /* =========================================
+           HEADINGS
+        ========================================== */
+
+        h1 {
+            font-size: clamp(26px, 5vw, 48px);
+            color: #222;
+            margin-bottom: 35px;
+            line-height: 1.3;
+        }
+
+
+        /* =========================================
+           BUTTONS
+        ========================================== */
+
+        button {
+            border: none;
+            padding: 15px 40px;
+
+            font-size: clamp(16px, 2.5vw, 20px);
+            font-weight: 600;
+
+            border-radius: 12px;
+
+            cursor: pointer;
+
+            transition: all 0.3s ease;
+
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .buttons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        #yesBtn,
+        .submitBtn {
+            background: #ff4d6d;
+            color: white;
+        }
+
+        #yesBtn:hover,
+        .submitBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 77, 109, 0.35);
+        }
+
+        #yesBtn:active,
+        .submitBtn:active {
+            transform: scale(0.96);
+        }
+
+        #noBtn {
+            background: #333;
+            color: white;
+            z-index: 100;
+            transition: all 0.2s ease;
+        }
+
+
+        /* =========================================
+           OPTIONS GRID
+        ========================================== */
+
+        .options {
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(220px, 280px));
+
+            justify-content: center;
+
+            gap: 20px;
+
+            width: 100%;
+            margin: 30px auto;
+        }
+
+        .option-wrapper {
+            width: 100%;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        .option {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            width: 100%;
+            min-height: 70px;
+
+            padding: 15px 20px;
+
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+
+            cursor: pointer;
+
+            font-size: clamp(16px, 2.5vw, 19px);
+            font-weight: 500;
+
+            background: white;
+
+            transition: all 0.25s ease;
+
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .option:hover {
+            border-color: #ff4d6d;
+            transform: translateY(-3px);
+
+            box-shadow:
+                0 8px 20px rgba(255, 77, 109, 0.15);
+        }
+
+        .option:active {
+            transform: scale(0.97);
+        }
+
+        input[type="radio"]:checked+.option {
+            background: #ff4d6d;
+            color: white;
+
+            border-color: #ff4d6d;
+
+            box-shadow:
+                0 8px 20px rgba(255, 77, 109, 0.3);
+        }
+
+        .submitBtn {
+            margin-top: 10px;
+            min-width: 160px;
+        }
+
+
+        /* =========================================
+           POPUP
+        ========================================== */
+
+        .popup {
+            position: fixed;
+            inset: 0;
+
+            background: rgba(0, 0, 0, 0.45);
+
+            display: none;
+
+            justify-content: center;
+            align-items: center;
+
+            z-index: 1000;
+
+            padding: 20px;
+        }
+
+        .popup.show {
+            display: flex;
+        }
+
+        .popup-content {
+            background: white;
+
+            width: 100%;
+            max-width: 500px;
+
+            padding: clamp(30px, 6vw, 45px);
+
+            border-radius: 25px;
+
+            text-align: center;
+
+            animation: popupAnimation 0.5s ease;
+        }
+
+        .popup-content h2 {
+            font-size: clamp(28px, 7vw, 40px);
+            margin-bottom: 15px;
+            color: #222;
+        }
+
+        .popup-content p {
+            font-size: clamp(17px, 4vw, 20px);
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .heart {
+            font-size: clamp(60px, 15vw, 80px);
+            margin-top: 20px;
+
+            animation: heartbeat 1s infinite;
+        }
+
+
+        /* =========================================
+           PAYMENT QR PAGE
+        ========================================== */
+
+        .qr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .payment-card {
+            width: 100%;
+            max-width: 480px;
+
+            background: white;
+
+            border: 1px solid #eee;
+
+            border-radius: 24px;
+
+            padding: clamp(20px, 5vw, 35px);
+
+            box-shadow:
+                0 10px 35px rgba(0, 0, 0, 0.08);
+        }
+
+        .payment-icon {
+            font-size: clamp(40px, 10vw, 50px);
+            margin-bottom: 10px;
+        }
+
+        .payment-title {
+            font-size: clamp(24px, 6vw, 30px);
+            font-weight: 700;
+
+            color: #222;
+
+            margin-bottom: 12px;
+        }
+
+        .payment-text {
+            font-size: clamp(15px, 4vw, 18px);
+
+            color: #666;
+
+            margin-bottom: 25px;
+
+            line-height: 1.5;
+        }
+
+        .qr-box {
+            width: 100%;
+            max-width: 310px;
+
+            background: white;
+
+            border: 3px solid #ff4d6d;
+
+            border-radius: 20px;
+
+            padding: 12px;
+
+            margin: auto;
+
+            box-shadow:
+                0 10px 30px rgba(255, 77, 109, 0.15);
+        }
+
+        #qrCode {
+            display: block;
+
+            width: 100%;
+            height: auto;
+
+            aspect-ratio: 1 / 1;
+
+            object-fit: contain;
+        }
+
+        .scan-note {
+            margin-top: 20px;
+
+            font-size: clamp(14px, 3.5vw, 16px);
+
+            color: #999;
+        }
+
+
+        /* =========================================
+           ANIMATIONS
+        ========================================== */
+
+        @keyframes heartbeat {
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.15);
+            }
+
+        }
+
+
+        @keyframes popupAnimation {
+
+            from {
+                transform: scale(0.7);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+        }
+
+
+        @keyframes fadeIn {
+
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+
+        /* =========================================
+           TABLET RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 768px) {
+
+            .container {
+                padding: 25px 15px;
+            }
+
+            .options {
+                grid-template-columns:
+                    repeat(2, minmax(150px, 1fr));
+
+                gap: 15px;
+
+                max-width: 600px;
+            }
+
+        }
+
+
+        /* =========================================
+           MOBILE RESPONSIVE
+        ========================================== */
+
+        @media (max-width: 600px) {
+
+            .page {
+                padding: 16px;
+            }
+
+            .container {
+                padding: 20px 8px;
+            }
+
+            h1 {
+                margin-bottom: 28px;
+            }
+
+            .buttons {
+                gap: 15px;
+            }
+
+            button {
+                padding: 14px 30px;
+                min-height: 50px;
+            }
+
+            /* Single column on mobile */
+
+            .options {
+                grid-template-columns: 1fr;
+
+                width: 100%;
+                max-width: 350px;
+
+                gap: 14px;
+
+                margin: 25px auto;
+            }
+
+            .option {
+                min-height: 60px;
+                padding: 14px;
+            }
+
+            .submitBtn {
+                width: min(100%, 280px);
+            }
+
+            .popup {
+                padding: 15px;
+            }
+
+            .popup-content {
+                border-radius: 20px;
+            }
+
+            .payment-card {
+                border-radius: 20px;
+            }
+
+            .qr-box {
+                max-width: 280px;
+            }
+
+        }
+
+
+        /* =========================================
+           SMALL MOBILE
+        ========================================== */
+
+        @media (max-width: 380px) {
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .buttons {
+                gap: 10px;
+            }
+
+            #yesBtn,
+            #noBtn {
+                padding: 12px 22px;
+            }
+
+            .options {
+                max-width: 300px;
+            }
+
+            .qr-box {
+                max-width: 240px;
+            }
+
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+    <!-- =========================================
+         PAGE 1 - DATE QUESTION
+    ========================================== -->
+
+    <section class="page active" id="page1">
+
+        <div class="container">
+
+            <h1>Are you interested in a date with me? ❤️</h1>
+
+            <div class="buttons">
+
+                <button id="yesBtn">
+                    Yes ❤️
+                </button>
+
+                <button id="noBtn">
+                    No 😢
+                </button>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         PAGE 2 - TIME SELECTION
+    ========================================== -->
+
+    <section class="page" id="page2">
+
+        <div class="container">
+
+            <h1>Pick your convenient time ⏰❤️</h1>
+
+            <div class="options">
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="time1" name="time" value="6:00 PM">
+
+                    <label class="option" for="time1">
+                        🕕 6:00 PM
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="time2" name="time" value="6:30 PM">
+
+                    <label class="option" for="time2">
+                        🕡 6:30 PM
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="time3" name="time" value="7:00 PM">
+
+                    <label class="option" for="time3">
+                        🕖 7:00 PM
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="time4" name="time" value="Always Free For You">
+
+                    <label class="option" for="time4">
+                        ❤️ Always free for you
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <button class="submitBtn" id="timeSubmit">
+                Submit ❤️
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         PAGE 3 - PLACE SELECTION
+    ========================================== -->
+
+    <section class="page" id="page3">
+
+        <div class="container">
+
+            <h1>
+                Which place are you interested in for a date with me? ❤️
+            </h1>
+
+
+            <div class="options">
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="beach" name="place" value="Beach">
+
+                    <label class="option" for="beach">
+                        🏖️ Beach
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="kuttichira" name="place" value="Kuttichira">
+
+                    <label class="option" for="kuttichira">
+                        🌴 Kuttichira
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="manachira" name="place" value="Manachira">
+
+                    <label class="option" for="manachira">
+                        🌳 Manachira
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="medical" name="place" value="Medical College">
+
+                    <label class="option" for="medical">
+                        🏥 Medical College
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <button class="submitBtn" id="placeSubmit">
+                Submit ❤️
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         PAGE 4 - FOOD SELECTION
+    ========================================== -->
+
+    <section class="page" id="page4">
+
+        <div class="container">
+
+            <h1>What do you want to have with me? 😋❤️</h1>
+
+
+            <div class="options">
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="juice" name="food" value="Pappaya Juice">
+
+                    <label class="option" for="juice">
+                        🥤 Pappaya Juice
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="porotta" name="food" value="Porotta and Beef">
+
+                    <label class="option" for="porotta">
+                        🥘 Porotta & Beef
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="tea" name="food" value="Tea">
+
+                    <label class="option" for="tea">
+                        ☕ Tea
+                    </label>
+
+                </div>
+
+
+                <div class="option-wrapper">
+
+                    <input type="radio" id="biriyani" name="food" value="Biriyani">
+
+                    <label class="option" for="biriyani">
+                        🍛 Biriyani
+                    </label>
+
+                </div>
+
+            </div>
+
+
+            <button class="submitBtn" id="foodSubmit">
+                Submit ❤️
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         PAGE 5 - PLAYFUL PAYMENT QR
+    ========================================== -->
+
+    <section class="page" id="page5">
+
+        <div class="container qr-container">
+
+            <div class="payment-card">
+
+                <div class="payment-icon">
+                    💳
+                </div>
+
+
+                <div class="payment-title">
+                    Date Payment
+                </div>
+
+
+                <p class="payment-text">
+                    Please scan the QR code to complete your date payment 😌
+                </p>
+
+
+                <div class="qr-box">
+
+                    <img id="qrCode" src="" alt="QR Code">
+
+                </div>
+
+
+                <p class="scan-note">
+                    Scan to proceed ❤️
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =========================================
+         POPUP
+    ========================================== -->
+
+    <div class="popup" id="popup">
+
+        <div class="popup-content">
+
+            <h2>Wow! 😍</h2>
+
+            <p>
+                This is the one I expected! ❤️
+            </p>
+
+            <div class="heart">
+                ❤️
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================
+         JAVASCRIPT
+    ========================================== -->
+
+    <script>
+
+        /* =====================================
+           PAGE ELEMENTS
+        ====================================== */
+
+        const page1 = document.getElementById("page1");
+        const page2 = document.getElementById("page2");
+        const page3 = document.getElementById("page3");
+        const page4 = document.getElementById("page4");
+        const page5 = document.getElementById("page5");
+
+
+        /* =====================================
+           BUTTONS
+        ====================================== */
+
+        const yesBtn = document.getElementById("yesBtn");
+        const noBtn = document.getElementById("noBtn");
+
+        const timeSubmit = document.getElementById("timeSubmit");
+        const placeSubmit = document.getElementById("placeSubmit");
+        const foodSubmit = document.getElementById("foodSubmit");
+
+
+        /* =====================================
+           OTHER ELEMENTS
+        ====================================== */
+
+        const popup = document.getElementById("popup");
+        const qrCode = document.getElementById("qrCode");
+
+
+        /* =====================================
+           YES BUTTON
+        ====================================== */
+
+        yesBtn.addEventListener("click", function () {
+
+            page1.classList.remove("active");
+
+            page2.classList.add("active");
+
+        });
+
+
+        /* =====================================
+           NO BUTTON ESCAPE
+        ====================================== */
+
+        function moveNoButton() {
+
+            const buttonWidth = noBtn.offsetWidth;
+            const buttonHeight = noBtn.offsetHeight;
+
+            const padding = 15;
+
+            const maxX =
+                window.innerWidth -
+                buttonWidth -
+                padding * 2;
+
+            const maxY =
+                window.innerHeight -
+                buttonHeight -
+                padding * 2;
+
+
+            const randomX =
+                padding +
+                Math.random() *
+                Math.max(0, maxX);
+
+
+            const randomY =
+                padding +
+                Math.random() *
+                Math.max(0, maxY);
+
+
+            noBtn.style.position = "fixed";
+
+            noBtn.style.left =
+                randomX + "px";
+
+            noBtn.style.top =
+                randomY + "px";
+
+        }
+
+
+        /* Desktop */
+
+        noBtn.addEventListener(
+            "mouseenter",
+            moveNoButton
+        );
+
+
+        /* Mobile */
+
+        noBtn.addEventListener(
+            "touchstart",
+            function (event) {
+
+                event.preventDefault();
+
+                moveNoButton();
+
+            }
+        );
+
+
+        noBtn.addEventListener(
+            "click",
+            function (event) {
+
+                event.preventDefault();
+
+                moveNoButton();
+
+            }
+        );
+
+
+        /* =====================================
+           TIME SUBMIT
+        ====================================== */
+
+        timeSubmit.addEventListener(
+            "click",
+            function () {
+
+                const selectedTime =
+                    document.querySelector(
+                        'input[name="time"]:checked'
+                    );
+
+
+                if (!selectedTime) {
+
+                    alert(
+                        "Please pick a convenient time ❤️"
+                    );
+
+                    return;
+
+                }
+
+
+                page2.classList.remove("active");
+
+                page3.classList.add("active");
+
+            }
+        );
+
+
+        /* =====================================
+           PLACE SUBMIT
+        ====================================== */
+
+        placeSubmit.addEventListener(
+            "click",
+            function () {
+
+                const selectedPlace =
+                    document.querySelector(
+                        'input[name="place"]:checked'
+                    );
+
+
+                if (!selectedPlace) {
+
+                    alert(
+                        "Please select a place for our date 😌❤️"
+                    );
+
+                    return;
+
+                }
+
+
+                /* Show popup */
+
+                popup.classList.add("show");
+
+
+                /* After 5 seconds */
+
+                setTimeout(
+                    function () {
+
+                        popup.classList.remove("show");
+
+                        page3.classList.remove("active");
+
+                        page4.classList.add("active");
+
+                    },
+                    5000
+                );
+
+            }
+        );
+
+
+        /* =====================================
+           FOOD SUBMIT
+        ====================================== */
+
+        foodSubmit.addEventListener(
+            "click",
+            function () {
+
+                const selectedFood =
+                    document.querySelector(
+                        'input[name="food"]:checked'
+                    );
+
+
+                if (!selectedFood) {
+
+                    alert(
+                        "Choose something delicious 😋❤️"
+                    );
+
+                    return;
+
+                }
+
+
+                page4.classList.remove("active");
+
+                page5.classList.add("active");
+
+
+                /* =================================
+                   QR SURPRISE MESSAGE
+                ================================= */
+
+                const loveMessage =
+                    "I LOVE YOU ❤️";
+
+
+                qrCode.src =
+                    "https://api.qrserver.com/v1/create-qr-code/?size=400x400&data="
+                    +
+                    encodeURIComponent(loveMessage);
+
+            }
+        );
+
+    </script>
+
+</body>
+
+</html>
